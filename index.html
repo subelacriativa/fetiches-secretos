@@ -20,19 +20,19 @@
         h1 {
             color: #d63031;
             text-align: center;
-            margin-bottom: 10px;
-            font-size: 24px;
+            margin-bottom: 5px;
+            font-size: 26px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         p {
             color: #4a4a4a;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-size: 16px;
         }
 
-        /* Tela de Início Obrigatória para o Áudio Funcionar */
+        /* Tela de Início Obrigatória */
         #tela-inicial {
             position: fixed;
             top: 0;
@@ -47,7 +47,7 @@
             z-index: 10;
         }
 
-        .btn-jogar {
+        .btn-principal {
             background-color: #d63031;
             color: white;
             border: none;
@@ -57,15 +57,34 @@
             border-radius: 30px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4);
-            transition: transform 0.2s;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
-        .btn-jogar:hover {
+        .btn-principal:hover {
             transform: scale(1.05);
+            background-color: #b32424;
+        }
+
+        .btn-reset {
+            margin-top: 25px;
+            background-color: transparent;
+            color: #d63031;
+            border: 2px solid #d63031;
+            padding: 10px 25px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-reset:hover {
+            background-color: #d63031;
+            color: white;
         }
 
         #conteudo-jogo {
-            display: none; /* Escondido até o clique inicial */
+            display: none; 
             width: 100%;
             max-width: 400px;
             flex-direction: column;
@@ -81,7 +100,7 @@
 
         /* Estrutura 3D da Carta */
         .card {
-            height: 150px;
+            height: 140px;
             perspective: 1000px;
             cursor: pointer;
         }
@@ -91,10 +110,10 @@
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 0.6s;
+            transition: transform 0.5s ease;
             transform-style: preserve-3d;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+            border-radius: 12px;
         }
 
         .card.flipped .card-inner {
@@ -109,15 +128,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
-            padding: 10px;
+            border-radius: 12px;
+            padding: 12px;
             box-sizing: border-box;
         }
 
         .card-front {
             background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
             color: white;
-            font-size: 40px;
+            font-size: 42px;
             font-weight: bold;
             border: 3px solid #fff;
         }
@@ -126,31 +145,34 @@
             background-color: white;
             color: #2d3436;
             transform: rotateY(180deg);
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             border: 3px solid #ff7675;
             line-height: 1.4;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
 
-    <audio id="musica-fundo" loop src="JeTAime.mp3"></audio>
-    <audio id="som-clique" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav"></audio>
+    <!-- Áudios com preload configurado -->
+    <audio id="musica-fundo" loop preload="auto" src="JeTAime.mp3"></audio>
+    <audio id="som-clique" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav"></audio>
 
     <div id="tela-inicial">
-        <h1 style="margin-bottom: 20px;">Prontos para jogar? ❤️</h1>
-        <button class="btn-jogar" onclick="iniciarJogo()">Começar</button>
+        <h1 style="margin-bottom: 25px;">Prontos para jogar? ❤️</h1>
+        <button class="btn-principal" onclick="iniciarJogo()">Começar</button>
     </div>
 
     <div id="conteudo-jogo">
         <h1>Nosso Jogo do Amor ❤️</h1>
         <p>Escolha uma carta por vez e cumpra o desafio...</p>
         <div class="grid-container" id="grid"></div>
+        <button class="btn-reset" onclick="reiniciarJogo()">Embaralhar Novamente 🔄</button>
     </div>
 
     <script>
-        const desafios = [
+        const listaDesafios = [
             "Tire uma peça de roupa 🔞",
             "Me faça uma massagem de 3 minutos 💆‍♂️",
             "Dê um beijo de cinema de 30 segundos 💋",
@@ -161,46 +183,73 @@
             "Sussurre um desejo secreto no meu ouvido 💬"
         ];
 
-        desafios.sort(() => Math.random() - 0.5);
-
         const grid = document.getElementById('grid');
         const musicaFundo = document.getElementById('musica-fundo');
         const somClique = document.getElementById('som-clique');
 
-        // Configura o volume inicial (0.0 a 1.0)
-        musicaFundo.volume = 0.4; // Música de fundo mais baixa
-        somClique.volume = 0.8;   // Efeito de clique mais nítido
+        musicaFundo.volume = 0.3; 
+        somClique.volume = 0.7;   
 
         function iniciarJogo() {
-            // Esconde a tela inicial e mostra o jogo
             document.getElementById('tela-inicial').style.display = 'none';
             document.getElementById('conteudo-jogo').style.display = 'flex';
             
-            // Tenta reproduzir a música de fundo
-            musicaFundo.play().catch(error => console.log("Erro ao tocar música:", error));
+            // Força o desbloqueio do contexto de áudio exigido por navegadores mobile
+            tocarMusica();
+            gerarTabuleiro();
         }
 
-        desafios.forEach((desafio) => {
-            const card = document.createElement('div');
-            card.classList.add('card');
-            
-            card.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-front">❤️</div>
-                    <div class="card-back">${desafio}</div>
-                </div>
-            `;
-
-            card.addEventListener('click', function() {
-                // Toca o som do clique (reinicia o tempo para tocar imediatamente caso clique rápido)
-                somClique.currentTime = 0;
-                somClique.play().catch(error => console.log("Erro ao tocar som:", error));
-                
-                this.classList.toggle('flipped');
+        function tocarMusica() {
+            musicaFundo.play().catch(() => {
+                // Fallback para iOS/Safari: tenta tocar no primeiro toque na tela caso falhe no botão
+                document.addEventListener('click', function triggerAudio() {
+                    musicaFundo.play();
+                    document.removeEventListener('click', triggerAudio);
+                }, { once: true });
             });
+        }
 
-            grid.appendChild(card);
-        });
+        function gerarTabuleiro() {
+            grid.innerHTML = ''; // Limpa o tabuleiro anterior
+            
+            // Clona e embaralha a lista original de forma segura
+            const desafiosEmbaralhados = [...listaDesafios].sort(() => Math.random() - 0.5);
+
+            desafiosEmbaralhados.forEach((desafio) => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">❤️</div>
+                        <div class="card-back">${desafio}</div>
+                    </div>
+                `;
+
+                card.addEventListener('click', function() {
+                    // Toca o efeito sonoro cortando reproduções anteriores (evita atrasos)
+                    somClique.currentTime = 0;
+                    somClique.play().catch(e => console.log("Áudio pendente de interação"));
+                    
+                    this.classList.toggle('flipped');
+                });
+
+                grid.appendChild(card);
+            });
+        }
+
+        function reiniciarJogo() {
+            // Toca o som ao resetar
+            somClique.currentTime = 0;
+            somClique.play().catch(e => {});
+            
+            // Fecha todas as cartas com uma animação rápida antes de reembaralhar
+            const cartas = document.querySelectorAll('.card');
+            cartas.forEach(c => c.classList.remove('flipped'));
+            
+            // Aguarda a animação de fechamento acabar para gerar o novo tabuleiro
+            setTimeout(gerarTabuleiro, 400);
+        }
     </script>
 </body>
 </html>
