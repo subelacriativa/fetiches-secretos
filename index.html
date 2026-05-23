@@ -65,24 +65,6 @@
             background-color: #b32424;
         }
 
-        .btn-reset {
-            margin-top: 25px;
-            background-color: transparent;
-            color: #d63031;
-            border: 2px solid #d63031;
-            padding: 10px 25px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-reset:hover {
-            background-color: #d63031;
-            color: white;
-        }
-
         #conteudo-jogo {
             display: none; 
             width: 100%;
@@ -143,18 +125,31 @@
         .item {
             height: 120px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             color: #2d3436;
             padding: 5px;
             box-sizing: border-box;
             border-bottom: 1px solid #ffe3e3;
         }
 
-        /* Box de resultado final destacado */
+        /* Destaque para os Emojis sexys */
+        .item span {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* Estilo para a Capa Inicial Misteriosa */
+        .item.capa {
+            color: #d63031;
+            font-size: 16px;
+            background: #fff5f5;
+        }
+
         #resultado-texto {
             margin-top: 20px;
             padding: 15px;
@@ -184,7 +179,6 @@
 
     <!-- Áudios com preload configurado -->
     <audio id="musica-fundo" loop preload="auto" src="JeTAime.mp3"></audio>
-    <!-- Usando um som de clique/roletar padrão -->
     <audio id="som-clique" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav"></audio>
 
     <div id="tela-inicial">
@@ -202,16 +196,39 @@
             <div class="roleta"><div class="roleta-janela" id="roleta3"></div></div>
         </div>
 
-        <div id="resultado-texto"></div>
+        <div id="resultado-texto">Aperte o botão para revelar seu destino... 🔥</div>
 
-        <button class="btn-principal" id="btn-girar" onclick="girarRoletas()" style="margin-top: 25px; font-size: 18px;">Girar Roleta! 🎰</button>
+        <button class="btn-principal" id="btn-girar" onclick="girarRoletas()" style="margin-top: 25px; font-size: 18px;">🎰 Girar Roleta! 🎰</button>
     </div>
 
     <script>
-        // Configuração das 3 colunas independentes
-        const opcoesColuna1 = ["Beijar 💋", "Lamber 👅", "Chupar 🥵", "Massagear 💆‍♂️", "Morder de leve 🦷", "Soprar 💨"];
-        const opcoesColuna2 = ["o pescoço", "a nuca", "a barriga", "as coxas", "as orelhas", "os mamilos"];
-        const opcoesColuna3 = ["com olhos vendados 🙈", "usando o óleo de massagem ✨", "bem devagar... ⏳", "com gelo na boca 🧊", "com muita pegada! 🔥", "enquanto sussurra safadezas 💬"];
+        // Opções bem mais picantes e visuais, divididas em Emoji e Texto
+        const opcoesColuna1 = [
+            { emoji: "👅", texto: "Lamber gostoso" },
+            { emoji: "🥵", texto: "Chupar e provocar" },
+            { emoji: "💋", texto: "Beijar com desejo" },
+            { emoji: "🦷", texto: "Morder de leve" },
+            { emoji: "💆‍♀️", texto: "Massagear firme" },
+            { emoji: "🤫", texto: "Chupitar suave" }
+        ];
+
+        const opcoesColuna2 = [
+            { emoji: "🍒", texto: "os mamilos" },
+            { emoji: "🍑", texto: "a bunda" },
+            { emoji: "🍆", texto: "a intimidade" },
+            { emoji: "🦒", texto: "o pescoço e nuca" },
+            { emoji: "🦵", texto: "as coxas" },
+            { emoji: "🤰", texto: "a barriga" }
+        ];
+
+        const opcoesColuna3 = [
+            { emoji: "🙈", texto: "de olhos vendidos" },
+            { emoji: "✨", texto: "usando o óleo de massagem" },
+            { emoji: "🧊", texto: "com gelo na boca" },
+            { emoji: "⏳", texto: "bem devagar..." },
+            { emoji: "🔥", texto: "com muita pegada!" },
+            { emoji: "💬", texto: "sussurrando safadezas" }
+        ];
 
         const r1 = document.getElementById('roleta1');
         const r2 = document.getElementById('roleta2');
@@ -225,7 +242,6 @@
         musicaFundo.volume = 0.3; 
         somClique.volume = 0.7;   
 
-        // Altura fixa de cada item definida no CSS (120px)
         const itemHeight = 120;
 
         function iniciarJogo() {
@@ -245,54 +261,61 @@
             });
         }
 
-        // Preenche visualmente as roletas multiplicando os itens para dar efeito de giro infinito
+        // Preenche as roletas gerando a primeira posição com a "Capa Misteriosa"
         function inicializarRoletas() {
-            montarColuna(r1, opcoesColuna1);
-            montarColuna(r2, opcoesColuna2);
-            montarColuna(r3, opcoesColuna3);
+            montarColuna(r1, opcoesColuna1, "O QUE?");
+            montarColuna(r2, opcoesColuna2, "ONDE?");
+            montarColuna(r3, opcoesColuna3, "COMO?");
+            
+            // Força a exibição do texto instrutivo inicial
+            resultadoTexto.classList.add('show');
         }
 
-        function montarColuna(elementoHtml, listaItens) {
+        function montarColuna(elementoHtml, listaItens, textoCapa) {
             elementoHtml.innerHTML = '';
-            // Repete a lista 5 vezes para criar o efeito visual de rolagem longa
+            
+            // 1. Cria o item secreto (Capa) que aparece ANTES de girar
+            const itemCapa = document.createElement('div');
+            itemCapa.classList.add('item', 'capa');
+            itemCapa.innerHTML = `<span>🖤</span><strong>${textoCapa}</strong>`;
+            elementoHtml.appendChild(itemCapa);
+
+            // 2. Multiplica a lista para dar o efeito visual de rotação
             const listaExpandida = [...listaItens, ...listaItens, ...listaItens, ...listaItens, ...listaItens];
-            listaExpandida.forEach(texto => {
+            listaExpandida.forEach(obj => {
                 const item = document.createElement('div');
                 item.classList.add('item');
-                item.innerText = texto;
+                item.innerHTML = `<span>${obj.emoji}</span>${obj.texto}`;
                 elementoHtml.appendChild(item);
             });
         }
 
         function girarRoletas() {
-            // Desativa o botão temporariamente durante o giro
             btnGirar.disabled = true;
             resultadoTexto.classList.remove('show');
 
-            // Toca som de clique/giro
             somClique.currentTime = 0;
             somClique.play().catch(e => {});
 
-            // Sorteia o index final para cada coluna (Garante que pare entre as 2 ultimas repetições para o efeito de rolagem)
-            const idx1 = Math.floor(Math.random() * opcoesColuna1.length) + (opcoesColuna1.length * 3);
-            const idx2 = Math.floor(Math.random() * opcoesColuna2.length) + (opcoesColuna2.length * 3);
-            const idx3 = Math.floor(Math.random() * opcoesColuna3.length) + (opcoesColuna3.length * 3);
+            // Sorteia os index pulando o item 0 (que é a capa)
+            const idx1 = Math.floor(Math.random() * opcoesColuna1.length) + (opcoesColuna1.length * 3) + 1;
+            const idx2 = Math.floor(Math.random() * opcoesColuna2.length) + (opcoesColuna2.length * 3) + 1;
+            const idx3 = Math.floor(Math.random() * opcoesColuna3.length) + (opcoesColuna3.length * 3) + 1;
 
-            // Aplica a transição CSS simulando o movimento da máquina caça-níqueis
+            // Gira no CSS
             r1.style.transform = `translateY(-${idx1 * itemHeight}px)`;
             r2.style.transform = `translateY(-${idx2 * itemHeight}px)`;
             r3.style.transform = `translateY(-${idx3 * itemHeight}px)`;
 
-            // Aguarda o fim da transição do CSS (2 segundos) para exibir o resultado por extenso
             setTimeout(() => {
-                const acao = opcoesColuna1[idx1 % opcoesColuna1.length];
-                const local = opcoesColuna2[idx2 % opcoesColuna2.length];
-                const detalhe = opcoesColuna3[idx3 % opcoesColuna3.length];
+                // Descobre qual opção caiu usando o resto da divisão menos a capa
+                const acao = opcoesColuna1[(idx1 - 1) % opcoesColuna1.length];
+                const local = opcoesColuna2[(idx2 - 1) % opcoesColuna2.length];
+                const detalhe = opcoesColuna3[(idx3 - 1) % opcoesColuna3.length];
 
-                resultadoTexto.innerHTML = `🔥 Desafio: ${acao} ${local} ${detalhe}!`;
+                resultadoTexto.innerHTML = `🔥 Desafio: ${acao.texto} ${local.texto} ${detalhe.texto}!`;
                 resultadoTexto.classList.add('show');
                 
-                // Reativa o botão
                 btnGirar.disabled = false;
             }, 2000);
         }
