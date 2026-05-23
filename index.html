@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nosso Jogo do Amor ❤️</title>
+    <title>Caça-Níqueis do Prazer ❤️</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -86,70 +86,97 @@
         #conteudo-jogo {
             display: none; 
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             flex-direction: column;
             align-items: center;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+        /* Estrutura do Caça-Níqueis */
+        .maquina-container {
+            background: #fff;
+            border: 4px solid #d63031;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             width: 100%;
-        }
-
-        /* Estrutura 3D da Carta */
-        .card {
-            height: 140px;
-            perspective: 1000px;
-            cursor: pointer;
-        }
-
-        .card-inner {
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            overflow: hidden;
             position: relative;
+        }
+
+        /* Linha guia central (mira) */
+        .maquina-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
             width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.5s ease;
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-            border-radius: 12px;
+            height: 2px;
+            background: rgba(214, 48, 49, 0.3);
+            z-index: 5;
+            pointer-events: none;
         }
 
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
+        .roleta {
+            flex: 1;
+            height: 120px;
+            background: #f8f9fa;
+            border: 2px solid #ff7675;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
         }
 
-        .card-front, .card-back {
+        .roleta-janela {
             position: absolute;
             width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
+            top: 0;
+            transition: transform 2s cubic-bezier(0.1, 0.8, 0.1, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item {
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
-            padding: 12px;
-            box-sizing: border-box;
-        }
-
-        .card-front {
-            background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
-            color: white;
-            font-size: 42px;
+            text-align: center;
             font-weight: bold;
-            border: 3px solid #fff;
+            font-size: 14px;
+            color: #2d3436;
+            padding: 5px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ffe3e3;
         }
 
-        .card-back {
-            background-color: white;
-            color: #2d3436;
-            transform: rotateY(180deg);
-            font-size: 14px;
-            font-weight: 600;
-            border: 3px solid #ff7675;
-            line-height: 1.4;
-            overflow: hidden;
+        /* Box de resultado final destacado */
+        #resultado-texto {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #d63031;
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px dashed #d63031;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #resultado-texto.show {
+            opacity: 1;
         }
     </style>
 </head>
@@ -157,6 +184,7 @@
 
     <!-- Áudios com preload configurado -->
     <audio id="musica-fundo" loop preload="auto" src="JeTAime.mp3"></audio>
+    <!-- Usando um som de clique/roletar padrão -->
     <audio id="som-clique" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav"></audio>
 
     <div id="tela-inicial">
@@ -165,43 +193,51 @@
     </div>
 
     <div id="conteudo-jogo">
-        <h1>Nosso Jogo do Amor ❤️</h1>
-        <p>Escolha uma carta por vez e cumpra o desafio...</p>
-        <div class="grid-container" id="grid"></div>
-        <button class="btn-reset" onclick="reiniciarJogo()">Embaralhar Novamente 🔄</button>
+        <h1>Caça-Níqueis do Prazer ❤️</h1>
+        <p>Gire as roletas para montar o desafio aleatório da vez!</p>
+        
+        <div class="maquina-container">
+            <div class="roleta"><div class="roleta-janela" id="roleta1"></div></div>
+            <div class="roleta"><div class="roleta-janela" id="roleta2"></div></div>
+            <div class="roleta"><div class="roleta-janela" id="roleta3"></div></div>
+        </div>
+
+        <div id="resultado-texto"></div>
+
+        <button class="btn-principal" id="btn-girar" onclick="girarRoletas()" style="margin-top: 25px; font-size: 18px;">Girar Roleta! 🎰</button>
     </div>
 
     <script>
-        const listaDesafios = [
-            "Tire uma peça de roupa 🔞",
-            "Me faça uma massagem de 3 minutos 💆‍♂️",
-            "Dê um beijo de cinema de 30 segundos 💋",
-            "Posição: Do jeitinho que você mais gosta 🔥",
-            "Tome um gole da sua bebida 🥂",
-            "Fique sem falar por 1 minuto enquanto ganha carinho 🤫",
-            "Posição: De conchinha (mas com segundas intenções) 😉",
-            "Sussurre um desejo secreto no meu ouvido 💬"
-        ];
+        // Configuração das 3 colunas independentes
+        const opcoesColuna1 = ["Beijar 💋", "Lamber 👅", "Chupar 🥵", "Massagear 💆‍♂️", "Morder de leve 🦷", "Soprar 💨"];
+        const opcoesColuna2 = ["o pescoço", "a nuca", "a barriga", "as coxas", "as orelhas", "os mamilos"];
+        const opcoesColuna3 = ["com olhos vendados 🙈", "usando o óleo de massagem ✨", "bem devagar... ⏳", "com gelo na boca 🧊", "com muita pegada! 🔥", "enquanto sussurra safadezas 💬"];
 
-        const grid = document.getElementById('grid');
+        const r1 = document.getElementById('roleta1');
+        const r2 = document.getElementById('roleta2');
+        const r3 = document.getElementById('roleta3');
+        const resultadoTexto = document.getElementById('resultado-texto');
+        const btnGirar = document.getElementById('btn-girar');
+
         const musicaFundo = document.getElementById('musica-fundo');
         const somClique = document.getElementById('som-clique');
 
         musicaFundo.volume = 0.3; 
         somClique.volume = 0.7;   
 
+        // Altura fixa de cada item definida no CSS (120px)
+        const itemHeight = 120;
+
         function iniciarJogo() {
             document.getElementById('tela-inicial').style.display = 'none';
             document.getElementById('conteudo-jogo').style.display = 'flex';
             
-            // Força o desbloqueio do contexto de áudio exigido por navegadores mobile
             tocarMusica();
-            gerarTabuleiro();
+            inicializarRoletas();
         }
 
         function tocarMusica() {
             musicaFundo.play().catch(() => {
-                // Fallback para iOS/Safari: tenta tocar no primeiro toque na tela caso falhe no botão
                 document.addEventListener('click', function triggerAudio() {
                     musicaFundo.play();
                     document.removeEventListener('click', triggerAudio);
@@ -209,46 +245,56 @@
             });
         }
 
-        function gerarTabuleiro() {
-            grid.innerHTML = ''; // Limpa o tabuleiro anterior
-            
-            // Clona e embaralha a lista original de forma segura
-            const desafiosEmbaralhados = [...listaDesafios].sort(() => Math.random() - 0.5);
+        // Preenche visualmente as roletas multiplicando os itens para dar efeito de giro infinito
+        function inicializarRoletas() {
+            montarColuna(r1, opcoesColuna1);
+            montarColuna(r2, opcoesColuna2);
+            montarColuna(r3, opcoesColuna3);
+        }
 
-            desafiosEmbaralhados.forEach((desafio) => {
-                const card = document.createElement('div');
-                card.classList.add('card');
-                
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">❤️</div>
-                        <div class="card-back">${desafio}</div>
-                    </div>
-                `;
-
-                card.addEventListener('click', function() {
-                    // Toca o efeito sonoro cortando reproduções anteriores (evita atrasos)
-                    somClique.currentTime = 0;
-                    somClique.play().catch(e => console.log("Áudio pendente de interação"));
-                    
-                    this.classList.toggle('flipped');
-                });
-
-                grid.appendChild(card);
+        function montarColuna(elementoHtml, listaItens) {
+            elementoHtml.innerHTML = '';
+            // Repete a lista 5 vezes para criar o efeito visual de rolagem longa
+            const listaExpandida = [...listaItens, ...listaItens, ...listaItens, ...listaItens, ...listaItens];
+            listaExpandida.forEach(texto => {
+                const item = document.createElement('div');
+                item.classList.add('item');
+                item.innerText = texto;
+                elementoHtml.appendChild(item);
             });
         }
 
-        function reiniciarJogo() {
-            // Toca o som ao resetar
+        function girarRoletas() {
+            // Desativa o botão temporariamente durante o giro
+            btnGirar.disabled = true;
+            resultadoTexto.classList.remove('show');
+
+            // Toca som de clique/giro
             somClique.currentTime = 0;
             somClique.play().catch(e => {});
-            
-            // Fecha todas as cartas com uma animação rápida antes de reembaralhar
-            const cartas = document.querySelectorAll('.card');
-            cartas.forEach(c => c.classList.remove('flipped'));
-            
-            // Aguarda a animação de fechamento acabar para gerar o novo tabuleiro
-            setTimeout(gerarTabuleiro, 400);
+
+            // Sorteia o index final para cada coluna (Garante que pare entre as 2 ultimas repetições para o efeito de rolagem)
+            const idx1 = Math.floor(Math.random() * opcoesColuna1.length) + (opcoesColuna1.length * 3);
+            const idx2 = Math.floor(Math.random() * opcoesColuna2.length) + (opcoesColuna2.length * 3);
+            const idx3 = Math.floor(Math.random() * opcoesColuna3.length) + (opcoesColuna3.length * 3);
+
+            // Aplica a transição CSS simulando o movimento da máquina caça-níqueis
+            r1.style.transform = `translateY(-${idx1 * itemHeight}px)`;
+            r2.style.transform = `translateY(-${idx2 * itemHeight}px)`;
+            r3.style.transform = `translateY(-${idx3 * itemHeight}px)`;
+
+            // Aguarda o fim da transição do CSS (2 segundos) para exibir o resultado por extenso
+            setTimeout(() => {
+                const acao = opcoesColuna1[idx1 % opcoesColuna1.length];
+                const local = opcoesColuna2[idx2 % opcoesColuna2.length];
+                const detalhe = opcoesColuna3[idx3 % opcoesColuna3.length];
+
+                resultadoTexto.innerHTML = `🔥 Desafio: ${acao} ${local} ${detalhe}!`;
+                resultadoTexto.classList.add('show');
+                
+                // Reativa o botão
+                btnGirar.disabled = false;
+            }, 2000);
         }
     </script>
 </body>
