@@ -3,322 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caça-Níqueis do Prazer ❤️</title>
+    <title>Match dos Fetiches Secretos 🌶️</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ffe3e3 0%, #fbc2eb 100%);
+            background: linear-gradient(135deg, #2c001e 0%, #000000 100%);
+            color: #fff;
             min-height: 100vh;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ff4757;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.2);
             box-sizing: border-box;
         }
 
         h1 {
-            color: #d63031;
-            text-align: center;
-            margin-bottom: 5px;
-            font-size: 26px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            color: #ff4757;
+            font-size: 24px;
+            margin-top: 0;
+            text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
         }
 
         p {
-            color: #4a4a4a;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 16px;
+            color: #ccc;
+            font-size: 15px;
+            line-height: 1.5;
         }
 
-        /* Tela de Início Obrigatória */
-        #tela-inicial {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #ffe3e3 0%, #fbc2eb 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .btn-principal {
-            background-color: #d63031;
+        .btn {
+            background: #ff4757;
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 20px;
+            padding: 12px 30px;
+            font-size: 16px;
             font-weight: bold;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .btn-principal:hover {
-            transform: scale(1.05);
-            background-color: #b32424;
-        }
-
-        #conteudo-jogo {
-            display: none; 
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
             width: 100%;
-            max-width: 450px;
-            flex-direction: column;
-            align-items: center;
+            margin-top: 15px;
         }
 
-        /* Estrutura do Caça-Níqueis */
-        .maquina-container {
-            background: #fff;
-            border: 4px solid #d63031;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            width: 100%;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            overflow: hidden;
-            position: relative;
+        .btn:hover {
+            transform: scale(1.03);
+            background: #ff2e44;
         }
 
-        /* Linha guia central (mira) */
-        .maquina-container::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100%;
-            height: 2px;
-            background: rgba(214, 48, 49, 0.3);
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .roleta {
-            flex: 1;
-            height: 120px;
-            background: #f8f9fa;
-            border: 2px solid #ff7675;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .roleta-janela {
-            position: absolute;
-            width: 100%;
-            top: 0;
-            transition: transform 2s cubic-bezier(0.1, 0.8, 0.1, 1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .item {
-            height: 120px;
+        /* Estilo Tinder de Votação */
+        .fetiche-card {
+            background: #222;
+            border-radius: 15px;
+            padding: 40px 20px;
+            margin: 25px 0;
+            min-height: 120px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            font-weight: bold;
-            font-size: 13px;
-            color: #2d3436;
-            padding: 5px;
-            box-sizing: border-box;
-            border-bottom: 1px solid #ffe3e3;
+            border: 1px solid #333;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
         }
 
-        /* Destaque para os Emojis sexys */
-        .item span {
-            font-size: 24px;
-            margin-bottom: 4px;
+        .fetiche-emoji {
+            font-size: 45px;
+            margin-bottom: 15px;
         }
 
-        /* Estilo para a Capa Inicial Misteriosa */
-        .item.capa {
-            color: #d63031;
-            font-size: 16px;
-            background: #fff5f5;
-        }
-
-        #resultado-texto {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            text-align: center;
+        .fetiche-texto {
             font-size: 18px;
             font-weight: bold;
-            color: #d63031;
-            min-height: 54px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px dashed #d63031;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            color: #fff;
         }
 
-        #resultado-texto.show {
-            opacity: 1;
+        .botoes-tinder {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-tinder {
+            flex: 1;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .btn-tinder:active {
+            transform: scale(0.95);
+        }
+
+        .btn-passo {
+            background-color: #2f3542;
+            color: #ced6e0;
+        }
+
+        .btn-quero {
+            background-color: #2ed573;
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.4);
+        }
+
+        /* Lista de Matches Finais */
+        .match-item {
+            background: rgba(46, 213, 115, 0.15);
+            border: 1px solid #2ed573;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .no-match {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px dashed #ff4757;
+            padding: 20px;
+            border-radius: 10px;
+            color: #ffa5a5;
+        }
+
+        .progresso {
+            font-size: 12px;
+            color: #ff4757;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Áudios com preload configurado -->
-    <audio id="musica-fundo" loop preload="auto" src="JeTAime.mp3"></audio>
-    <audio id="som-clique" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav"></audio>
-
-    <div id="tela-inicial">
-        <h1 style="margin-bottom: 25px;">Prontos para jogar? ❤️</h1>
-        <button class="btn-principal" onclick="iniciarJogo()">Começar</button>
-    </div>
-
-    <div id="conteudo-jogo">
-        <h1>Caça-Níqueis do Prazer ❤️</h1>
-        <p>Gire as roletas para montar o desafio aleatório da vez!</p>
-        
-        <div class="maquina-container">
-            <div class="roleta"><div class="roleta-janela" id="roleta1"></div></div>
-            <div class="roleta"><div class="roleta-janela" id="roleta2"></div></div>
-            <div class="roleta"><div class="roleta-janela" id="roleta3"></div></div>
-        </div>
-
-        <div id="resultado-texto">Aperte o botão para revelar seu destino... 🔥</div>
-
-        <button class="btn-principal" id="btn-girar" onclick="girarRoletas()" style="margin-top: 25px; font-size: 18px;">🎰 Girar Roleta! 🎰</button>
+    <div class="card-container" id="jogo-container">
+        <!-- O conteúdo será gerado dinamicamente pelo JavaScript -->
     </div>
 
     <script>
-        // Opções bem mais picantes e visuais, divididas em Emoji e Texto
-        const opcoesColuna1 = [
-            { emoji: "👅", texto: "Lamber gostoso" },
-            { emoji: "🥵", texto: "Chupar e provocar" },
-            { emoji: "💋", texto: "Beijar com desejo" },
-            { emoji: "🦷", texto: "Morder de leve" },
-            { emoji: "💆‍♀️", texto: "Massagear firme" },
-            { emoji: "🤫", texto: "Chupitar suave" }
+        // Lista de fantasias e fetiches prontos (você pode alterar/adicionar quantos quiser)
+        const listaFetiches = [
+            { emoji: "🙈", texto: "Usar uma venda nos olhos" },
+            { emoji: "🧊", texto: "Brincar com gelo ou texturas quentes" },
+            { emoji: "🚗", texto: "Fazer em um lugar público/ousado" },
+            { emoji: "⛓️", texto: "Ser amarrado(a) ou prender as mãos" },
+            { emoji: "🎭", texto: "Realizar uma fantasia de Roleplay (personagens)" },
+            { emoji: "📸", texto: "Tirar fotos ou gravar um vídeo íntimo (e apagar depois)" },
+            { emoji: "🍫", texto: "Usar caldas quentes, chantilly ou morangos no corpo" },
+            { emoji: "🤫", texto: "Fazer uma rapidinha em um lugar proibido" },
+            { emoji: "👙", texto: "Escolher a lingerie/roupa do outro para a noite" },
+            { emoji: "💆‍♂️", texto: "Uma sessão longa de massagem erótica sem pressa" }
         ];
 
-        const opcoesColuna2 = [
-            { emoji: "🍒", texto: "os mamilos" },
-            { emoji: "🍑", texto: "o bumbum" },
-            { emoji: "🍆", texto: "a intimidade" },
-            { emoji: "🦒", texto: "o pescoço e nuca" },
-            { emoji: "🦵", texto: "as coxas" },
-            { emoji: "🤰", texto: "a barriga" }
-        ];
+        let jogadorAtual = 1;
+        let indexAtual = 0;
+        
+        // Armazenará as respostas: true para Quero, false para Passo
+        let respostasJogador1 = [];
+        let respostasJogador2 = [];
 
-        const opcoesColuna3 = [
-            { emoji: "🙈", texto: "de olhos vendados" },
-            { emoji: "✨", texto: "usando o óleo de massagem" },
-            { emoji: "🥵", texto: "gemendo gostoso" },
-            { emoji: "⏳", texto: "bem devagar..." },
-            { emoji: "🔥", texto: "com muita pegada!" },
-            { emoji: "💬", texto: "sussurrando safadezas" }
-        ];
+        const container = document.getElementById('jogo-container');
 
-        const r1 = document.getElementById('roleta1');
-        const r2 = document.getElementById('roleta2');
-        const r3 = document.getElementById('roleta3');
-        const resultadoTexto = document.getElementById('resultado-texto');
-        const btnGirar = document.getElementById('btn-girar');
+        // Tela 1: Boas-vindas / Instruções do Jogador 1
+        function telaInicial() {
+            container.innerHTML = `
+                <h1>Match dos Fetiches Secretos 🌶️</h1>
+                <p>Descubram novos desejos juntos sem medo ou julgamentos. O sistema só revelará as fantasias se <strong>AMBOS</strong> disserem SIM!</p>
+                <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
+                <p><strong>Passo 1:</strong> Entregue o celular para o <strong>Jogador 1</strong>.</p>
+                <button class="btn" onclick="iniciarVotacao()">Sou o Jogador 1 ➔</button>
+            `;
+        }
 
-        const musicaFundo = document.getElementById('musica-fundo');
-        const somClique = document.getElementById('som-clique');
+        // Inicia o loop de perguntas para o jogador da vez
+        function iniciarVotacao() {
+            indexAtual = 0;
+            mostrarCard();
+        }
 
-        musicaFundo.volume = 0.3; 
-        somClique.volume = 0.7;   
+        // Exibe o fetiche atual estilo Tinder
+        function mostrarCard() {
+            const fetiche = listaFetiches[indexAtual];
+            container.innerHTML = `
+                <div class="progresso">JOGADOR ${jogadorAtual} • ${indexAtual + 1}/${listaFetiches.length}</div>
+                <div class="fetiche-card">
+                    <div class="fetiche-emoji">${fetiche.emoji}</div>
+                    <div class="fetiche-texto">${fetiche.texto}</div>
+                </div>
+                <div class="botoes-tinder">
+                    <button class="btn-tinder btn-passo" onclick="votar(false)">Passo 🥱</button>
+                    <button class="btn-tinder btn-quero" onclick="votar(true)">Quero muito 🥵</button>
+                </div>
+            `;
+        }
 
-        const itemHeight = 120;
+        // Registra o voto e passa para o próximo card
+        function votar(quero) {
+            if (jogadorAtual === 1) {
+                respostasJogador1.push(quero);
+            } else {
+                respostasJogador2.push(quero);
+            }
 
-        function iniciarJogo() {
-            document.getElementById('tela-inicial').style.display = 'none';
-            document.getElementById('conteudo-jogo').style.display = 'flex';
+            indexAtual++;
+
+            if (indexAtual < listaFetiches.length) {
+                mostrarCard();
+            } else {
+                finalizarTurno();
+            }
+        }
+
+        // Gerencia a transição de turnos ou calcula o final
+        function finalizarTurno() {
+            if (jogadorAtual === 1) {
+                jogadorAtual = 2;
+                container.innerHTML = `
+                    <h1>Turno do Jogador 1 Concluído! ✔️</h1>
+                    <p>Suas respostas foram salvas em segredo absoluto.</p>
+                    <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
+                    <p>Agora, <strong>passe o celular</strong> para o <strong>Jogador 2</strong> fazer as escolhas dele(a).</p>
+                    <button class="btn" onclick="iniciarVotacao()">Sou o Jogador 2 ➔</button>
+                `;
+            } else {
+                calcularMatches();
+            }
+        }
+
+        // Compara os arrays e mostra o veredito final
+        function calcularMatches() {
+            let matches = [];
+
+            for (let i = 0; i < listaFetiches.length; i++) {
+                if (respostasJogador1[i] === true && respostasJogador2[i] === true) {
+                    matches.push(listaFetiches[i]);
+                }
+            }
+
+            let htmlResultado = `<h1>🔥 Seus Matches Secretos 🔥</h1>`;
             
-            tocarMusica();
-            inicializarRoletas();
+            if (matches.length > 0) {
+                htmlResultado += `<p>Vocês deram match nestas fantasias! Significa que ambos querem testar. Aproveitem o momento:</p>`;
+                matches.forEach(m => {
+                    htmlResultado += `
+                        <div class="match-item">
+                            <span>${m.emoji}</span>
+                            <span>${m.texto}</span>
+                        </div>
+                    `;
+                });
+            } else {
+                htmlResultado += `
+                    <div class="no-match">
+                        <p>💥 Ih, nenhum match exato dessa vez!</p>
+                        <p style="font-size: 13px; color: #ccc;">Não se preocupem, isso significa que seus desejos secretos estão guardados. Que tal jogar de novo e tentar ser mais ousado(a)?</p>
+                    </div>
+                `;
+            }
+
+            htmlResultado += `<button class="btn" onclick="reiniciarJogo()" style="background:#222; border:1px solid #ff4757; margin-top:25px;">Jogar Novamente 🔄</button>`;
+            container.innerHTML = htmlResultado;
         }
 
-        function tocarMusica() {
-            musicaFundo.play().catch(() => {
-                document.addEventListener('click', function triggerAudio() {
-                    musicaFundo.play();
-                    document.removeEventListener('click', triggerAudio);
-                }, { once: true });
-            });
+        function reiniciarJogo() {
+            jogadorAtual = 1;
+            respostasJogador1 = [];
+            respostasJogador2 = [];
+            telaInicial();
         }
 
-        // Preenche as roletas gerando a primeira posição com a "Capa Misteriosa"
-        function inicializarRoletas() {
-            montarColuna(r1, opcoesColuna1, "O QUE?");
-            montarColuna(r2, opcoesColuna2, "ONDE?");
-            montarColuna(r3, opcoesColuna3, "COMO?");
-            
-            // Força a exibição do texto instrutivo inicial
-            resultadoTexto.classList.add('show');
-        }
-
-        function montarColuna(elementoHtml, listaItens, textoCapa) {
-            elementoHtml.innerHTML = '';
-            
-            // 1. Cria o item secreto (Capa) que aparece ANTES de girar
-            const itemCapa = document.createElement('div');
-            itemCapa.classList.add('item', 'capa');
-            itemCapa.innerHTML = `<span>🖤</span><strong>${textoCapa}</strong>`;
-            elementoHtml.appendChild(itemCapa);
-
-            // 2. Multiplica a lista para dar o efeito visual de rotação
-            const listaExpandida = [...listaItens, ...listaItens, ...listaItens, ...listaItens, ...listaItens];
-            listaExpandida.forEach(obj => {
-                const item = document.createElement('div');
-                item.classList.add('item');
-                item.innerHTML = `<span>${obj.emoji}</span>${obj.texto}`;
-                elementoHtml.appendChild(item);
-            });
-        }
-
-        function girarRoletas() {
-            btnGirar.disabled = true;
-            resultadoTexto.classList.remove('show');
-
-            somClique.currentTime = 0;
-            somClique.play().catch(e => {});
-
-            // Sorteia os index pulando o item 0 (que é a capa)
-            const idx1 = Math.floor(Math.random() * opcoesColuna1.length) + (opcoesColuna1.length * 3) + 1;
-            const idx2 = Math.floor(Math.random() * opcoesColuna2.length) + (opcoesColuna2.length * 3) + 1;
-            const idx3 = Math.floor(Math.random() * opcoesColuna3.length) + (opcoesColuna3.length * 3) + 1;
-
-            // Gira no CSS
-            r1.style.transform = `translateY(-${idx1 * itemHeight}px)`;
-            r2.style.transform = `translateY(-${idx2 * itemHeight}px)`;
-            r3.style.transform = `translateY(-${idx3 * itemHeight}px)`;
-
-            setTimeout(() => {
-                // Descobre qual opção caiu usando o resto da divisão menos a capa
-                const acao = opcoesColuna1[(idx1 - 1) % opcoesColuna1.length];
-                const local = opcoesColuna2[(idx2 - 1) % opcoesColuna2.length];
-                const detalhe = opcoesColuna3[(idx3 - 1) % opcoesColuna3.length];
-
-                resultadoTexto.innerHTML = `🔥 Desafio: ${acao.texto} ${local.texto} ${detalhe.texto}!`;
-                resultadoTexto.classList.add('show');
-                
-                btnGirar.disabled = false;
-            }, 2000);
-        }
+        // Inicializa o jogo na tela certa
+        telaInicial();
     </script>
 </body>
 </html>
